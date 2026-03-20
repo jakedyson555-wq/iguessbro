@@ -194,42 +194,24 @@ class CardErrorBoundary extends Component {
 function ClassicNotApprovedCard({
   onLogout = () => { window.location.href = '/login'; },
 }) {
-  // loadBanPayload writes a placeholder if nothing is in localStorage,
-  // so null here means something went badly wrong — render nothing.
   const payload = loadBanPayload();
-  if (!payload) return null;
 
-  const {
-    punishmentTypeDescription: pType,
-    endDate,
-    beginDate,
-    reasonKeys,
-    moderatorNote,
-    utterances,
-  } = payload;
+  const pType        = payload?.punishmentTypeDescription ?? null;
+  const endDate      = payload?.endDate ?? null;
+  const beginDate    = payload?.beginDate ?? null;
+  const reasonKeys   = payload?.reasonKeys ?? [];
+  const moderatorNote = payload?.moderatorNote ?? null;
+  const utterances   = payload?.utterances ?? [];
 
-  const reviewDate = formatClassicDate(beginDate) ?? 'Unknown date';
-
-  // ── Reason display ───────────────────────────────────────────────────────
-  // Unknown keys normalise to 'Label.Reason.Other' in banDataService.
-  // If all keys are Other, suppress the reason row in the evidence box.
-
-  const meaningful = reasonKeys.filter(k => k !== 'Label.Reason.Other');
-  const allOther   = meaningful.length === 0;
-
-  // ── Moderator note ────────────────────────────────────────────────────────
-  // Always render the label. Coerce to string so null/undefined never crashes.
-
-  const safeNote = typeof moderatorNote === 'string' ? moderatorNote : '';
-
-  // ── EndDate validity ──────────────────────────────────────────────────────
-  // A suspension with a malformed/missing endDate renders without the date
-  // and blocks reactivation entirely.
-
+  const reviewDate       = formatClassicDate(beginDate) ?? 'Unknown date';
   const endDateValid     = Number.isFinite(endDate);
   const reactivationDate = endDateValid ? formatClassicDate(endDate) : null;
 
-  // ── Countdown ────────────────────────────────────────────────────────────
+  const meaningful = reasonKeys.filter(k => k !== 'Label.Reason.Other');
+  const allOther   = meaningful.length === 0;
+  const safeNote   = typeof moderatorNote === 'string' ? moderatorNote : '';
+
+  // ── All hooks above any early return ─────────────────────────────────────
 
   const [remaining, setRemaining] = useState(
     () => (isSuspensionType(pType) && endDateValid) ? Math.max(0, endDate - Date.now()) : 0
@@ -245,19 +227,23 @@ function ClassicNotApprovedCard({
     return () => clearInterval(id);
   }, [pType, endDate, endDateValid]);
 
-  const suspensionExpired = isSuspensionType(pType) && endDateValid && remaining <= 0;
+  const [revealed, setRevealed] = useState(false);
 
-  // ── UI state ─────────────────────────────────────────────────────────────
+  useEffect(() => {
+    const id = setTimeout(() => setRevealed(true), 400);
+    return () => clearTimeout(id);
+  }, []);
 
   const [agreed,            setAgreed]            = useState(false);
   const [reactivateLoading, setReactivateLoading] = useState(false);
   const [logoutLoading,     setLogoutLoading]     = useState(false);
 
-  // Reactivation only allowed when endDate is valid and suspension has expired,
-  // or it's a warn. Malformed endDate permanently blocks reactivation.
+  // ── Early return after all hooks ──────────────────────────────────────────
+  if (!payload) return null;
+
+  const suspensionExpired  = isSuspensionType(pType) && endDateValid && remaining <= 0;
   const showReactivationUI = isWarnType(pType) || suspensionExpired;
   const showActiveBanLine  = isSuspensionType(pType);
-  // Hide appeal on warns and expired temp bans — nothing actionable at that point
   const showAppealLine     = !isWarnType(pType) && !suspensionExpired;
 
   // ── Handlers ─────────────────────────────────────────────────────────────
@@ -309,11 +295,11 @@ function ClassicNotApprovedCard({
       {/* Review date */}
       <div style={{ ...ts, paddingLeft: '12px', paddingRight: '12px' }} data-test-id="classic-not-approved-description">
         {tr('Label.Reviewed')}{' '}
-        <span style={{ fontWeight: 600, color: '#222222' }}>{reviewDate}</span>
+        <span style={{ fontWeight: 600, color: '#222222' }}>{revealed ? reviewDate : ''}</span>
       </div>
 
       {/* Moderator note — label always shown, value may be empty */}
-      {safeNote.length > 0 && (
+      {revealed && safeNote.length > 0 && (
       <div style={{ ...ts, paddingLeft: '12px', paddingRight: '12px' }} data-test-id="classic-not-approved-description">
         {tr('Label.ModeratorNote')}{' '}
         <span style={{ fontWeight: 600, color: '#222222' }}>
@@ -355,7 +341,7 @@ function ClassicNotApprovedCard({
                   <div data-test-id="classic-not-approved-bad-utterance-pair" className="flex flex-col gap-0.75">
                     <div style={{ fontSize: '14px', fontWeight: 600, color: '#222222' }} data-test-id="classic-not-approved-reason-item">
                       {tr('Label.Reason')}{' '}
-                      <span style={{ fontWeight: 500, color: '#343434' }}>{itemReason}</span>
+                      <span style={{ fontWeight: 500, color: '#343434' }}>{revealed ? itemReason : ''}</span>
                     </div>
                     <div style={{ fontSize: '14px', fontWeight: 600, color: '#222222' }} data-test-id="classic-not-approved-reason-item">
                       {tr('Label.OffensiveItem')}
@@ -384,7 +370,7 @@ function ClassicNotApprovedCard({
                         </div>
                       )
                     ) : (
-                      <span style={{ fontWeight: 500, color: '#343434', padding: '8px 30px 10px 30px' }}>{item}</span>
+                      <span style={{ fontWeight: 500, color: '#343434', padding: '8px 30px 10px 30px' }}>{revealed ? item : ''}</span>
                     )}
                   </div>
                 </div>
@@ -416,7 +402,7 @@ function ClassicNotApprovedCard({
         return (
           <div style={{ ...ts, paddingLeft: '12px', paddingRight: '12px' }} data-test-id="classic-not-approved-ban-description">
             {tr(banDescKey)}
-            {reactivationDate ? ` ${reactivationDate}.` : '.'}
+            {reactivationDate && revealed ? ` ${reactivationDate}.` : '.'}
           </div>
         );
       })()}
