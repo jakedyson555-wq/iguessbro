@@ -438,7 +438,7 @@ function ClassicNotApprovedCard({
           .
         </div>
       )}
-
+ 
       {/* Appeal line — hidden on warns and expired temp bans 
       {showAppealLine && (
         <div style={{ ...ts, paddingLeft: '12px', paddingRight: '12px' }} data-test-id="classic-not-approved-appeal-item">
