@@ -431,7 +431,7 @@ function ClassicNotApprovedCard({
       
       {showAppealLine && (
         <div style={{ ...ts, paddingLeft: '10px', paddingRight: '10px' }} data-test-id="classic-not-approved-appeal-item">
-          If you wish to appeal, please send an email to{' '}
+          If you wish to appeal, please send an email to{' '} 
           <a href="mailto:appeals@boiby.dev" className="text-link-classic">
              appeals@boiby.dev
           </a>
