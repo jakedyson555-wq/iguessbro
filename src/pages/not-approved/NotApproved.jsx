@@ -23,6 +23,7 @@
 // TODO: fat content deleted box glitch thing
 // TODO: audio bans
 
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { StrictMode, useState, useEffect, Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from '../../App';
@@ -529,7 +530,11 @@ function ClassicNotApprovedContent({ onLogout }) {
 createRoot(document.getElementById('not-approved-root')).render(
   <StrictMode>
     <App>
-      <ClassicNotApprovedContent />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/not-approved" element={<ClassicNotApprovedContent />} />
+        </Routes>
+      </BrowserRouter>
     </App>
   </StrictMode>
 );
