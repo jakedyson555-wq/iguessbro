@@ -1,10 +1,9 @@
-// App.jsx
-
 import { useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 import Nav from './components/Nav';
 import './index.css';
 
-export default function App({ children }) {
+export default function App() {
   useEffect(() => {
     document.body.style.overflowX = 'hidden';
     return () => { document.body.style.overflowX = ''; };
@@ -24,7 +23,7 @@ export default function App({ children }) {
         style={{ paddingTop: 44 }}
         className="outline-none flex-1"
       >
-        {children}
+        <Outlet />
       </main>
     </div>
   );

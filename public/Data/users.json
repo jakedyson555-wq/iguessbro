@@ -1,0 +1,79 @@
+{
+    "users": [
+      {
+        "id": 1,
+        "userName": "boiby",
+        "displayName": "boiby",
+        "premium": true,
+        "admin": true,
+        "isBanned": false,
+        "joined": "2026-02-22",
+        "friends": 3,
+        "followers": 4,
+        "following": 2,
+        "profileImage": "/assets/boiby.png",
+        "bio": "Welcome to Boiby. The platform of all time.",
+        "verified": true
+      },
+      {
+        "id": 2,
+        "userName": "JohnDoe",
+        "displayName": "JohnDoe",
+        "premium": false,
+        "admin": false,
+        "isBanned": false,
+        "joined": "2026-02-22",
+        "friends": 0,
+        "followers": 0,
+        "following": 0,
+        "profileImage": "/assets/boiby.png",
+        "bio": "test account",
+        "verified": false
+      },
+      {
+        "id": 3,
+        "userName": "JoeBloggs",
+        "displayName": "JoeBloggs",
+        "premium": false,
+        "admin": false,
+        "isBanned": false,
+        "joined": "2026-02-24",
+        "friends": 0,
+        "followers": 0,
+        "following": 0,
+        "profileImage": "/assets/boiby.png",
+        "bio": "test account",
+        "verified": false
+      },
+      {
+        "id": 4,
+        "userName": "qa",
+        "displayName": "qa",
+        "premium": false,
+        "admin": false,
+        "isBanned": false,
+        "joined": "2026-02-24",
+        "friends": 0,
+        "followers": 0,
+        "following": 0,
+        "profileImage": "/assets/boiby.png",
+        "bio": "qa testing",
+        "verified": false
+      },
+      {
+        "id": 5,
+        "userName": "ModerationTest",
+        "displayName": "ModerationTest",
+        "premium": false,
+        "admin": false,
+        "isBanned": true,
+        "joined": "2026-02-24",
+        "friends": 0,
+        "followers": 0,
+        "following": 0,
+        "profileImage": "/assets/boiby.png",
+        "bio": "banned account yeah",
+        "verified": false
+      }
+    ]
+  }

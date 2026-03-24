@@ -85,6 +85,7 @@ export default defineConfig({
           warn(warning);
         },
       input: {
+        main: resolve(__dirname, 'index.html'),
         notapproved:        resolve(__dirname, 'Membership/NotApproved.html'),
       },
       output: {
